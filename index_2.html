@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pacte — prototype</title>
+<style>
+  :root {
+    --bg: #F4F3EF;
+    --surface: #FFFFFF;
+    --surface-2: #ECEAE3;
+    --text-primary: #1F1E1B;
+    --text-secondary: #6B6A64;
+    --border: #DDDBD3;
+    --border-strong: #C7C5BC;
+    --teal: #0F6E56;
+    --teal-bg: #E1F5EE;
+    --amber: #854F0B;
+    --amber-bg: #FAEEDA;
+    --green: #1D9E75;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    padding: 32px 16px;
+  }
+  .wrap {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .logo {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .tagline {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    flex: 1;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+  }
+  .tab.active {
+    background: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+  .card {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+  .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 4px;
+  }
+  .balance {
+    font-size: 34px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .bar-track {
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 4px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+  .task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: var(--surface);
+  }
+  .task-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .task-btn {
+    border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    padding: 7px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .task-btn.done {
+    background: var(--teal-bg);
+    color: var(--teal);
+    border-color: var(--teal-bg);
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .metric {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid var(--border);
+  }
+  .metric .val {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .contract-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .contract-row:last-child { border-bottom: none; }
+  .contract-row span:first-child { color: var(--text-secondary); }
+  .log-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+  }
+  .log-item .check {
+    color: var(--teal);
+    margin-right: 6px;
+  }
+  .log-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--surface);
+  }
+  .log-empty {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+  }
+  .retirer-btn {
+    border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+  .retirer-btn:hover {
+    background: var(--amber-bg);
+  }
+  .alert-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .alert-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .alert-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot.watch { background: var(--amber); }
+  .dot.concern { background: #A32D2D; }
+  .alert-time {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .alert-body {
+    display: none;
+    padding: 0 14px 14px 32px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .alert-body.open { display: block; }
+  .alert-body strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Pacte</div>
+  <div class="tagline">Le temps d'écran, négocié, pas imposé.</div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-enfant">Vue enfant</button>
+    <button class="tab" id="tab-parent">Vue parent</button>
+    <button class="tab" id="tab-alertes">Alertes</button>
+  </div>
+
+  <div id="view-enfant">
+    <div class="card">
+      <p class="label">Temps disponible aujourd'hui</p>
+      <p class="balance" id="balance-display">1h 30</p>
+      <div class="bar-track"><div class="bar-fill" id="balance-bar" style="width:37%"></div></div>
+    </div>
+
+    <p class="section-title">Gagne du temps en plus</p>
+    <div id="task-list"></div>
+  </div>
+
+  <div id="view-parent" class="hidden">
+    <div class="grid2">
+      <div class="metric">
+        <p class="label">Temps écran aujourd'hui</p>
+        <p class="val" id="parent-used">0 min</p>
+      </div>
+      <div class="metric">
+        <p class="label">Temps gagné cette semaine</p>
+        <p class="val" id="parent-earned">0 min</p>
+      </div>
+    </div>
+
+    <p class="section-title">Contrat en cours</p>
+    <div class="card">
+      <div class="contract-row"><span>Base de temps par jour</span><span>1h 30</span></div>
+      <div class="contract-row"><span>Devoirs finis</span><span>+30 min</span></div>
+      <div class="contract-row"><span>Sport ou sortie</span><span>+30 min</span></div>
+      <div class="contract-row"><span>Chambre rangée</span><span>+15 min</span></div>
+    </div>
+
+    <p class="section-title">Activité récente</p>
+    <div id="parent-log"></div>
+  </div>
+
+  <div id="view-alertes" class="hidden">
+    <div class="card" style="background: var(--amber-bg); border-color: var(--amber-bg);">
+      <p style="font-size:13px; margin:0; color: var(--amber);">Pas de mouchard mot pour mot. Pacte signale des catégories larges, pas chaque recherche individuelle, pour garder un filet de sécurité sans casser la confiance.</p>
+    </div>
+    <p class="section-title">Catégories signalées</p>
+    <div id="history-list"></div>
+  </div>
+</div>
+
+<script>
+const tasks = [
+  {id:1, label:"Devoirs terminés", minutes:30, done:false},
+  {id:2, label:"Sport ou sortie dehors", minutes:30, done:false},
+  {id:3, label:"Chambre rangée", minutes:15, done:false}
+];
+const base = 90;
+
+function renderTasks(){
+  const list = document.getElementById('task-list');
+  list.innerHTML = '';
+  tasks.forEach(t => {
+    const row = document.createElement('div');
+    row.className = 'task';
+    row.innerHTML = '<div class="task-left">' + t.label + '</div>' +
+      '<button class="task-btn ' + (t.done ? 'done' : '') + '" data-id="' + t.id + '">' +
+      (t.done ? 'Fait +' + t.minutes + 'min' : '+' + t.minutes + ' min') + '</button>';
+    list.appendChild(row);
+  });
+  document.querySelectorAll('.task-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const task = tasks.find(x => x.id === id);
+      task.done = !task.done;
+      updateBalance();
+      renderTasks();
+      updateParentLog();
+    });
+  });
+}
+
+function updateBalance(){
+  const earned = tasks.filter(t => t.done).reduce((a,t) => a + t.minutes, 0);
+  const total = base + earned;
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  document.getElementById('balance-display').textContent = h + 'h ' + (m < 10 ? '0' : '') + m;
+  const pct = Math.min(100, Math.round((total / 180) * 100));
+  document.getElementById('balance-bar').style.width = pct + '%';
+  document.getElementById('parent-earned').textContent = earned + ' min';
+}
+
+function updateParentLog(){
+  const done = tasks.filter(t => t.done);
+  const log = document.getElementById('parent-log');
+  if(done.length === 0){
+    log.innerHTML = '<div class="log-empty">Aucune tâche validée pour l\'instant.</div>';
+    return;
+  }
+  log.innerHTML = done.map(t =>
+    '<div class="log-item">' +
+      '<span><span class="check">&#10003;</span>' + t.label + ' — +' + t.minutes + ' min</span>' +
+      '<button class="retirer-btn" data-id="' + t.id + '">Retirer, pas fait</button>' +
+    '</div>'
+  ).join('');
+  document.querySelectorAll('.retirer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const task = tasks.find(x => x.id === id);
+      task.done = false;
+      updateBalance();
+      renderTasks();
+      updateParentLog();
+    });
+  });
+}
+
+const alerts = [
+  {
+    id: 1,
+    label: "Recherches liées au mal-être ou à l'isolement",
+    level: "concern",
+    time: "hier, 22h14",
+    tip: "Ne pas accuser ni confronter à froid. Choisis un moment calme pour ouvrir la discussion, sans jugement ni surveillance à outrance : \"J'ai remarqué que tu n'avais pas l'air dans ton assiette, tu veux qu'on en parle ?\". Si le mal-être semble installé ou sérieux, un professionnel (médecin, psychologue scolaire) reste le bon relais, tu n'as pas à gérer ça seul en tant que parent."
+  },
+  {
+    id: 2,
+    label: "Contenu violent ou choquant",
+    level: "watch",
+    time: "mardi, 19h02",
+    tip: "Beaucoup d'ados tombent dessus par curiosité ou algorithme, pas forcément volontairement. Demande simplement ce qu'il/elle a vu et ce qu'il/elle en a pensé, plutôt que de partir du principe que c'est intentionnel."
+  },
+  {
+    id: 3,
+    label: "Contenu à caractère sexuel",
+    level: "watch",
+    time: "lundi, 23h40",
+    tip: "Normal à l'adolescence, pas la peine de dramatiser. Si le sujet revient souvent, c'est peut-être l'occasion d'une discussion ouverte sur la sexualité, le consentement et les rapports sains, plutôt qu'un blocage pur."
+  },
+  {
+    id: 4,
+    label: "Recherches sur l'alcool ou d'autres substances",
+    level: "watch",
+    time: "samedi, 21h18",
+    tip: "Peut être de la simple curiosité (cours de SVT, actu, une soirée à venir). Pose la question directement et calmement plutôt que de sanctionner sur la base d'une seule recherche."
+  }
+];
+let openAlert = null;
+
+function renderHistory(){
+  const list = document.getElementById('history-list');
+  list.innerHTML = alerts.map(a =>
+    '<div class="alert-item">' +
+      '<div class="alert-head" data-id="' + a.id + '">' +
+        '<div class="alert-left"><span class="dot ' + a.level + '"></span>' + a.label + '</div>' +
+        '<span class="alert-time">' + a.time + '</span>' +
+      '</div>' +
+      '<div class="alert-body ' + (openAlert === a.id ? 'open' : '') + '"><strong>Comment réagir</strong>' + a.tip + '</div>' +
+    '</div>'
+  ).join('');
+  document.querySelectorAll('.alert-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const id = parseInt(head.dataset.id);
+      openAlert = openAlert === id ? null : id;
+      renderHistory();
+    });
+  });
+}
+const views = ['enfant', 'parent', 'alertes'];
+function showView(name){
+  views.forEach(v => {
+    document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
+    document.getElementById('tab-' + v).classList.toggle('active', v === name);
+  });
+}
+document.getElementById('tab-enfant').addEventListener('click', () => showView('enfant'));
+document.getElementById('tab-parent').addEventListener('click', () => showView('parent'));
+document.getElementById('tab-alertes').addEventListener('click', () => showView('alertes'));
+
+renderTasks();
+updateBalance();
+updateParentLog();
+renderHistory();
+</script>
+</body>
+</html>
